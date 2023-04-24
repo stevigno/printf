@@ -1,73 +1,51 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include "main.h"
+#include <stddef.h>
 /**
- * _printf - print function
- * @format: given string
- * Return: always 0
-*/
+ * _printf - function that produces output according to a format.
+ * @format: pointer to format string
+ * Return: count of printed characters.
+ */
 int _printf(const char *format, ...)
 {
-unsigned int i = 0, j, ibuf = 0;
-va_list ptr;
-char *buffer;
-char *str;
+int count;
+int i;
+int j;
+va_list args;
 
-va_start(ptr, format);
-buffer = malloc(sizeof(char) * 100);
-if (buffer == NULL)
-return (1);
-while (format && format[i])
+all_prot m[] = {
+{"%%", def_percent},
+{"%S", def_string},
+{"%c", def_char}
+};
+
+count = 0;
+i = 0;
+
+if (format == NULL)
+return (0);
+
+va_start(args, format);
+
+while (format[i] != '\0')
 {
-if (format[i] == '%')
+if (format[i] != '%')
 {
-if (format[i + 1] == '\0')
-{
-write(1, buffer, ibuf);
-free(buffer);
-va_end(ptr);
-return (-1);
-}
-else if (format[i + 1] == '%')
-{
-buffer[ibuf] = format[i + 1];
-ibuf++;
-i++;
+count++;
+_putchar(format[i]);
 }
 else
 {
-switch (format[i + 1])
+for (j = 0 ; j < 3 ; j++)
 {
-case 'c':
-buffer[ibuf] = va_arg(ptr, int);
-ibuf++;
-i++;
-break;
-case 's':
-j = 0;
-str = va_arg(ptr, char *);
-for (; str[j]; j++)
+if (m[j].id[1] == format[i + 1])
 {
-buffer[ibuf] = str[j];
-ibuf++;
-}
-i++;
-break;
-
+count += m[j].function(args);
 }
 }
-}
-else
-{
-buffer[ibuf] = format[i];
-ibuf++;
+i = i + 1;
 }
 i++;
 }
-buffer[ibuf] = '\0';
-write(1, buffer, ibuf);
-va_end(ptr);
-free(buffer);
-return (ibuf);
+va_end(args);
+return (count);
 }
