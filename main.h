@@ -1,26 +1,28 @@
-#ifndef _MAIN_H
-#define _MAIN_H
-#include <stdarg.h>
-#include <stdio.h>
+#ifndef MAIN_H
+#define MAIN_H
 #include <unistd.h>
-
+#include <stdarg.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 int _printf(const char *format, ...);
 int _putchar(char c);
+
 /**
- * struct format - structure that defines
- * the format specifier and the function that defines it
- * @id: character to identify specifier
- * @function: pointer to function for specifier
+ * struct checker - maps the specifiers for printf
+ * @id: char pointer of the specifier
+ * @func: type pointer to function for the conversion
+ *
  */
-typedef struct format
+typedef struct checker
 {
 char *id;
-int (*function)();
-} all_prot;
-
-int def_percent(void);
-int def_string(va_list args);
-int def_char(va_list args);
-
+int (*func)();
+} check_match;
+int istring(va_list list);
+int ipercent(void);
+int iprintchar(va_list arg);
+int valint(va_list list);
+int valni(va_list list, int print_sign);
 
 #endif
